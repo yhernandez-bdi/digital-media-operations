@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDI Campaign Naming Convention Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border-radius: 2px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .form-group select, .form-group input {
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .result-box h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            word-break: break-all;
+        }
+        
+        .platform-rules {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .platform-rules h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .platform-rules ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+        
+        .definitions {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .definitions h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .definitions dl {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 20px;
+        }
+        
+        .definitions dt {
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .definitions dd {
+            color: #2c3e50;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 BDI Campaign Naming Tool</h1>
+            <p>Generate consistent, platform-specific campaign and ad names</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>Campaign & Ad Name Builder</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="platform">Platform *</label>
+                        <select id="platform" onchange="updateCampaignOptions()">
+                            <option value="">Select Platform</option>
+                            <option value="google-ads">Google Ads</option>
+                            <option value="facebook">Facebook/Meta</option>
+                            <option value="dsp">DSP (Display/Native/CTV)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client">Client Code *</label>
+                        <select id="client">
+                            <option value="">Select Client</option>
+                            <option value="WMM">WMM</option>
+                            <option value="CASM">CASM</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fiscal-year">Fiscal Year *</label>
+                        <select id="fiscal-year">
+                            <option value="">Select FY</option>
+                            <option value="FY26">FY26</option>
+                            <option value="FY27">FY27</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campaign-type">Campaign Type *</label>
+                        <select id="campaign-type" onchange="updateAudienceOptions()">
+                            <option value="">Select Campaign Type</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="audience-category">Audience Category</label>
+                        <select id="audience-category">
+                            <option value="">Select Audience</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="audience-type">Audience Type</label>
+                        <select id="audience-type">
+                            <option value="">Select Type</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="month">Launch Month *</label>
+                        <select id="month">
+                            <option value="">Select Month</option>
+                            <option value="2407">July 2024</option>
+                            <option value="2408">August 2024</option>
+                            <option value="2409">September 2024</option>
+                            <option value="2410">October 2024</option>
+                            <option value="2411">November 2024</option>
+                            <option value="2412">December 2024</option>
+                            <option value="2501">January 2025</option>
+                            <option value="2502">February 2025</option>
+                            <option value="2503">March 2025</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="creative-name">Creative Name *</label>
+                        <input type="text" id="creative-name" placeholder="e.g., Summer Heat Relief">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-date">End Date</label>
+                        <input type="text" id="end-date" placeholder="e.g., Ends07.31 or EndsEOFY">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="testing">Testing Status</label>
+                        <select id="testing">
+                            <option value="">Select Status</option>
+                            <option value="Test">Test</option>
+                            <option value="Control">Control</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="result-box" id="results" style="display: none;">
+                    <h3>🎯 Generated Names</h3>
+                    <div id="campaign-result"></div>
+                    <div id="audience-result"></div>
+                    <div id="ad-result"></div>
+                </div>
+                
+                <div class="platform-rules" id="platform-rules" style="display: none;">
+                    <h4>Platform-Specific Rules</h4>
+                    <div id="rules-content"></div>
+                </div>
+            </div>
+            
+            <div class="definitions">
+                <h4>📚 Quick Reference</h4>
+                <dl>
+                    <dt>TOFU</dt>
+                    <dd>Top of Funnel (LALs, Interests, Wiland)</dd>
+                    <dt>MOFU</dt>
+                    <dd>Middle of Funnel (website retargeting, leads, email subscribers but non-donors, volunteers, lapsed donors)</dd>
+                    <dt>BOFU</dt>
+                    <dd>Bottom of Funnel (active single gift donors, monthly donors)</dd>
+                    <dt>Brand</dt>
+                    <dd>People searching for brand terms</dd>
+                    <dt>NonBrand</dt>
+                    <dd>People searching for non-brand terms</dd>
+                    <dt>EOFY</dt>
+                    <dd>End of Fiscal Year</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const platformRules = {
+            'google-ads': {
+                campaigns: ['Main Program - Brand', 'Main Program - NonBrand', 'Main Program - PMax'],
+                rules: [
+                    'Brand campaigns target brand search terms',
+                    'NonBrand campaigns target non-brand search terms', 
+                    'PMax campaigns use Performance Max automation'
+                ]
+            },
+            'facebook': {
+                campaigns: ['Main Program - TOFU', 'Main Program - MOFU', 'Main Program - BOFU'],
+                rules: [
+                    'TOFU targets cold audiences (LALs, Interests)',
+                    'MOFU targets warm audiences (retargeting, leads)',
+                    'BOFU targets hot audiences (donors, subscribers)'
+                ]
+            },
+            'dsp': {
+                campaigns: ['Main Program - TOFU/MOFU', 'Main Program - BOFU'],
+                rules: [
+                    'TOFU/MOFU combined for display efficiency',
+                    'BOFU separate for donor-focused messaging',
+                    'Uses Line Items and Groups structure'
+                ]
+            }
+        };
+
+        const audienceOptions = {
+            'Main Program - TOFU': {
+                categories: ['Lookalike', 'Interests', 'Wiland'],
+                types: ['LAL 1% - Pur 180 days', 'ALL', 'Email_Subscribers']
+            },
+            'Main Program - MOFU': {
+                categories: ['Retarget', 'Lapsed', 'Email_Subscribers'],
+                types: ['Website Visitors', '13-25 months', 'Non-donors']
+            },
+            'Main Program - BOFU': {
+                categories: ['Donors', 'Sustainer', 'Monthly Donors'],
+                types: ['0-12 months', 'Active', 'Current']
+            },
+            'Main Program - Brand': {
+                categories: ['Brand Search'],
+                types: ['Exact Match', 'Phrase Match']
+            },
+            'Main Program - NonBrand': {
+                categories: ['NonBrand Search'],
+                types: ['Broad Match', 'Phrase Match']
+            },
+            'Main Program - PMax': {
+                categories: ['ALL'],
+                types: ['Automated']
+            }
+        };
+
+        function updateCampaignOptions() {
+            const platform = document.getElementById('platform').value;
+            const campaignSelect = document.getElementById('campaign-type');
+            
+            campaignSelect.innerHTML = '<option value="">Select Campaign Type</option>';
+            
+            if (platform && platformRules[platform]) {
+                platformRules[platform].campaigns.forEach(campaign => {
+                    const option = document.createElement('option');
+                    option.value = campaign;
+                    option.textContent = campaign;
+                    campaignSelect.appendChild(option);
+                });
+                
+                showPlatformRules(platform);
+            } else {
+                hidePlatformRules();
+            }
+            
+            updateAudienceOptions();
+        }
+
+        function updateAudienceOptions() {
+            const campaignType = document.getElementById('campaign-type').value;
+            const categorySelect = document.getElementById('audience-category');
+            const typeSelect = document.getElementById('audience-type');
+            
+            categorySelect.innerHTML = '<option value="">Select Audience</option>';
+            typeSelect.innerHTML = '<option value="">Select Type</option>';
+            
+            if (campaignType && audienceOptions[campaignType]) {
+                const options = audienceOptions[campaignType];
+                
+                options.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+                
+                options.types.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type;
+                    typeSelect.appendChild(option);
+                });
+            }
+            
+            generateNames();
+        }
+
+        function showPlatformRules(platform) {
+            const rulesDiv = document.getElementById('platform-rules');
+            const rulesContent = document.getElementById('rules-content');
+            
+            if (platformRules[platform]) {
+                const rules = platformRules[platform].rules;
+                rulesContent.innerHTML = '<ul>' + rules.map(rule => `<li>${rule}</li>`).join('') + '</ul>';
+                rulesDiv.style.display = 'block';
+            }
+        }
+
+        function hidePlatformRules() {
+            document.getElementById('platform-rules').style.display = 'none';
+        }
+
+        function generateNames() {
+            const client = document.getElementById('client').value;
+            const fiscalYear = document.getElementById('fiscal-year').value;
+            const campaignType = document.getElementById('campaign-type').value;
+            const audienceCategory = document.getElementById('audience-category').value;
+            const audienceType = document.getElementById('audience-type').value;
+            const month = document.getElementById('month').value;
+            const creativeName = document.getElementById('creative-name').value;
+            const endDate = document.getElementById('end-date').value;
+            const testing = document.getElementById('testing').value;
+
+            if (!client || !fiscalYear || !campaignType) {
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+
+            // Generate Campaign Name
+            const campaignName = `${client} ${fiscalYear}_${campaignType.replace('Main Program - ', '')}`;
+            
+            // Generate Audience Name
+            let audienceName = '';
+            if (audienceCategory && audienceType) {
+                audienceName = `${client}_${audienceCategory}_${audienceType}`;
+            }
+            
+            // Generate Ad Name
+            let adName = '';
+            if (month && creativeName) {
+                adName = `${month}_${client}_${creativeName}`;
+                if (endDate) adName += `_${endDate}`;
+                if (testing) adName += `_${testing}`;
+            }
+
+            // Display results
+            document.getElementById('campaign-result').innerHTML = `
+                <strong>Campaign Name:</strong> 
+                <div class="result-item">
+                    ${campaignName}
+                    <button class="copy-btn" onclick="copyToClipboard('${campaignName}')">Copy</button>
+                </div>
+            `;
+            
+            if (audienceName) {
+                document.getElementById('audience-result').innerHTML = `
+                    <strong>Audience Name:</strong> 
+                    <div class="result-item">
+                        ${audienceName}
+                        <button class="copy-btn" onclick="copyToClipboard('${audienceName}')">Copy</button>
+                    </div>
+                `;
+            } else {
+                document.getElementById('audience-result').innerHTML = '';
+            }
+            
+            if (adName) {
+                document.getElementById('ad-result').innerHTML = `
+                    <strong>Ad Name:</strong> 
+                    <div class="result-item">
+                        ${adName}
+                        <button class="copy-btn" onclick="copyToClipboard('${adName}')">Copy</button>
+                    </div>
+                `;
+            } else {
+                document.getElementById('ad-result').innerHTML = '';
+            }
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Simple feedback - could be enhanced with a toast notification
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            });
+        }
+
+        // Add event listeners to all form elements
+        document.querySelectorAll('select, input').forEach(element => {
+            element.addEventListener('change', generateNames);
+            element.addEventListener('keyup', generateNames);
+        });
+    </script>
+</body>
+</html>
